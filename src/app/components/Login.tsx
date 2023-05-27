@@ -73,8 +73,14 @@ const Login = () => {
           label='Password'
           type='password'
         />
+        <Box sx={{ mb: 1 }}></Box>
+
         <Button onClick={loginUser} variant='contained'>
           Login
+        </Button>
+        <Box sx={{ mb: 1 }}></Box>
+        <Button href={"register"} variant='contained'>
+          Register
         </Button>
         <Box sx={{ p: 1 }} />
         {warningMessage && (
