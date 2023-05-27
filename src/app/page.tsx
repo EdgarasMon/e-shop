@@ -1,12 +1,8 @@
 "use client";
-import Register from "./components/Register";
+import Home from "../../src/app/components/Home";
 
-function Home() {
-  return (
-    <div className='App'>
-      <>Home</>
-    </div>
-  );
+function App() {
+  return <Home />;
 }
 
-export default Home;
+export default App;
