@@ -17,7 +17,7 @@ export default function Warning(props: WarningProps) {
 
   return (
     <Alert
-      severity={info || error || warning || success}
+      // severity={info || error || warning || success}
       variant='filled'
       onClose={() => closeWarning()}
     >

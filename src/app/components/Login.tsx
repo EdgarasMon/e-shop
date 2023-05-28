@@ -6,6 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import Warning from "../components/Warning";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const loginStyle = {
   display: "flex",
@@ -82,6 +83,11 @@ const Login = () => {
         <Button href={"register"} variant='contained'>
           Register
         </Button>
+        <Box sx={{ mb: 1 }}></Box>
+        <Button href={"home"} variant='contained' startIcon={<ArrowBackIcon />}>
+          Back
+        </Button>
+        <Box sx={{ mb: 1 }}></Box>
         <Box sx={{ p: 1 }} />
         {warningMessage && (
           <Warning

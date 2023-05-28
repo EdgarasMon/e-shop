@@ -1,5 +1,5 @@
 "use client";
-import Home from "../../src/app/components/Home";
+import Home from "./components/Home";
 
 function App() {
   return <Home />;

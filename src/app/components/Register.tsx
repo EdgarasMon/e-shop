@@ -10,6 +10,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import Warning from "../components/Warning";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import HomeIcon from "@mui/icons-material/Home";
 
 interface IUserData {
   name: string;
@@ -218,7 +220,19 @@ const RegisterForm = () => {
             <Button variant='contained' onClick={registerUser}>
               Signup
             </Button>
-            <Box sx={{ p: 1 }} />
+            <Box sx={{ mb: 1 }} />
+            <Button
+              href={"/login"}
+              variant='contained'
+              startIcon={<ArrowBackIcon />}
+            >
+              Back
+            </Button>
+            <Box sx={{ mb: 1 }} />
+            <Button href={"/"} variant='contained' startIcon={<HomeIcon />}>
+              Home
+            </Button>
+            <Box sx={{ mb: 1 }}></Box>
             {warningMessage && (
               <Warning
                 warningMessage={warningMessage}
