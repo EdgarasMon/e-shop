@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import LoginIcon from "@mui/icons-material/LoginOutlined";
 import Link from "next/link";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const pages = ["Products", "Pricing", "News", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -132,13 +133,19 @@ function ResponsiveAppBar() {
           </Box>
 
           <Tooltip title='login / register'>
-            <IconButton sx={{ color: "none" }}>
+            <IconButton>
               {/* TODO take off link color  */}
               <Link href={"/login"}>
                 <LoginIcon />
               </Link>
             </IconButton>
           </Tooltip>
+
+          <IconButton>
+            <Link href={"/cart"}>
+              <ShoppingCartIcon />
+            </Link>
+          </IconButton>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
