@@ -18,7 +18,7 @@ import shoppingTypes from "../../../data/shoppingTypes.json";
 import colors from "../../../data/colors.json";
 
 function AddItem() {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<any>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [specification, setSpecification] = useState("");
@@ -31,20 +31,26 @@ function AddItem() {
   const [warningMessage, setWarningMessage] = useState("");
   const [warningType, setWarningType] = useState("");
 
-  const uploadFile = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
+  // const uploadFile = async (e: any) => {
+  //   try {
+  //     setSelectedFile(e.target.files[0]);
+  //     console.log("selectedFile", selectedFile);
+  //     const formData = new FormData();
+  //     formData.append("image", selectedFile);
 
-  const uploadItemPhoto = () => {
-    // You can perform additional logic here, such as sending the file to a server
+  //     const response = await axios.post(
+  //       "http://localhost:3000/items/addImage",
+  //       formData
+  //     );
+  //     console.log("File uploaded successfully:", response.data);
+  //   } catch (error) {
+  //     console.error("Failed to upload file:", error);
+  //   }
+  // };
 
-    // Example: Print file information to the console
-    if (selectedFile) {
-      console.log("Selected File:", selectedFile);
-      console.log("File Name:", selectedFile.name);
-      console.log("File Size:", selectedFile.size);
-      console.log("File Type:", selectedFile.type);
-    }
+  const selectImage = (e: any) => {
+    setSelectedFile(e.target.files[0]); // TODO not always sets image at first try find out why and fix
+    console.log("selectedFile", selectedFile);
   };
 
   const closeWarningMessage = () => {
@@ -62,21 +68,20 @@ function AddItem() {
     setColor("");
   };
 
-  const addItem = () => {
-    uploadItemPhoto();
+  const addItem = async () => {
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("specification", specification);
+    formData.append("price", price);
+    formData.append("type", type);
+    formData.append("brand", brand);
+    formData.append("model", model);
+    formData.append("color", color);
 
     axios
-      .post("http://localhost:3000/items/addItem", {
-        // selectedFile,
-        name,
-        description,
-        specification,
-        price,
-        type,
-        brand,
-        model,
-        color,
-      })
+      .post("http://localhost:3000/items/addItem", formData)
       .then((res) => {
         const { message, type } = res.data;
         setWarningMessage(message ?? "Unknown error");
@@ -91,7 +96,7 @@ function AddItem() {
   };
 
   const selectStyle = { m: 1, width: 300 };
-  const models = ["S12", "S14", "X10 pro"];
+  const models = ["S12", "S14", "X10 pro"]; // TODO add json with models
 
   return (
     <>
@@ -109,7 +114,7 @@ function AddItem() {
           <TableRow>
             <TableCell sx={{ m: 1, width: 300, height: 300 }}>
               <div>
-                <input type='file' onChange={uploadFile} />
+                <input type='file' onChange={selectImage} />
               </div>
             </TableCell>
             <TableCell>
