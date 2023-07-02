@@ -7,22 +7,23 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import IItem from "../Interfaces/IItem";
 
-interface IItem {
-  _id: string;
-  brand: string;
-  color: string;
-  description: string;
-  model: string;
-  name: string;
-  price: number;
-  specification: string;
-  type: string;
-}
+// interface IItem {
+//   _id: string;
+//   brand: string;
+//   color: string;
+//   description: string;
+//   model: string;
+//   name: string;
+//   price: number;
+//   specification: string;
+//   type: string;
+// }
 
 export default function Item(props: { itemId: string }) {
   const itemId = props.itemId;
-  const [item, setItem] = useState(["Loading..."]);
+  const [item, setItem] = useState<IItem>();
 
   useEffect(() => {
     axios
@@ -43,7 +44,6 @@ export default function Item(props: { itemId: string }) {
         }}
       >
         <Box sx={{ width: 500, mr: 2 }}>
-          {/* this is item page {itemId} */}
           <CardMedia
             component='img'
             height='194'

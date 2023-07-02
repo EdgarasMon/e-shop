@@ -11,21 +11,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Link from "next/link";
-import Item from "./Item";
+import IItem from "../Interfaces/IItem";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
-}
-interface IItemData {
-  _id: string;
-  brand: string;
-  color: string;
-  description: string;
-  model: string;
-  name: string;
-  price: number;
-  specification: string;
-  type: string;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -39,7 +28,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export default function ItemCard(props: { itemData: IItemData }) {
+export default function ItemCard(props: { itemData: IItem }) {
   const itemData = props.itemData;
   const [expanded, setExpanded] = React.useState(false);
 

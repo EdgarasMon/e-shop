@@ -9,13 +9,13 @@ import ImageCarousel2 from "../../app/components/ImageCarousel2";
 import Footer from "../../app/components/Footer";
 import Pagination from "@mui/material/Pagination";
 import axios from "axios";
+import IItem from "../../app/Interfaces/IItem";
 
 const Home = () => {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<IItem[]>();
 
   useEffect(() => {
     axios.get("http://localhost:3000/items/getItems").then((res) => {
-      console.log("res.data", res.data.data);
       setItems(res.data.data);
     });
   }, []);
@@ -46,7 +46,7 @@ const Home = () => {
             <Box sx={{ display: "flex", flexWrap: "wrap", m: 1 }}>
               {items &&
                 items.map((item) => (
-                  <ItemCard key={item._id || "undefined"} itemData={item} />
+                  <ItemCard key={item._id} itemData={item} />
                 ))}
             </Box>
             <Box sx={{ display: "flex", justifyContent: "center", m: 4 }}>
