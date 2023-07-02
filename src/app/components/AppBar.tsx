@@ -15,9 +15,23 @@ import LoginIcon from "@mui/icons-material/LoginOutlined";
 import Link from "next/link";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const pages = ["Products", "Pricing", "News", "About"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = [
+  "Profile",
+  "Account",
+  "Dashboard",
+  <Link
+    style={{ textDecoration: "none" }}
+    key='AddItem'
+    color='white'
+    href={"/addItem"}
+  >
+    Add items
+  </Link>,
+  "Logout",
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -132,28 +146,48 @@ function ResponsiveAppBar() {
             ))}
           </Box>
 
-          <Tooltip title='login / register'>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "baseline",
+            }}
+          >
+            <Tooltip title='login'>
+              <IconButton>
+                <Link href={"/login"}>
+                  <LoginIcon
+                    sx={{
+                      color: "white",
+                    }}
+                  />
+                </Link>
+              </IconButton>
+            </Tooltip>
+
             <IconButton>
-              {/* TODO take off link color  */}
-              <Link href={"/login"}>
-                <LoginIcon />
-              </Link>
+              <Tooltip title='cart'>
+                <Link href={"/cart"}>
+                  <ShoppingCartIcon
+                    sx={{
+                      color: "white",
+                    }}
+                  />
+                </Link>
+              </Tooltip>
             </IconButton>
-          </Tooltip>
 
-          <IconButton>
-            <Link href={"/cart"}>
-              <ShoppingCartIcon />
-            </Link>
-          </IconButton>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title='Open settings'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' />
+            <Tooltip title='user settings'>
+              <IconButton onClick={handleOpenUserMenu}>
+                {/* <Avatar alt='Remy Sharp' /> */}
+                <AccountCircleIcon
+                  sx={{
+                    color: "white",
+                  }}
+                />
                 {/* src='/static/images/avatar/2.jpg' */}
               </IconButton>
             </Tooltip>
+
             <Menu
               sx={{ mt: "45px" }}
               id='menu-appbar'

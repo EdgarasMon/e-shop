@@ -1,8 +1,7 @@
+import * as React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import ItemCardInCart from "./ItemCardInCart";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,11 +13,16 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Cart = () => {
   return (
     <>
-      <ShoppingCartIcon />
+      <Button href={"home"} variant='contained' startIcon={<ArrowBackIcon />}>
+        Back
+      </Button>
+
       <TableContainer component={Paper}>
         <Table sx={{ height: 200 }}>
           <TableHead>
@@ -29,49 +33,31 @@ const Cart = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* TODO map items */}
-            {/* {rows.map((row) => ( */}
-            <TableRow
-              //   key={name}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component='th' scope='row'>
+            <TableRow>
+              <TableCell align='right'>
                 <ItemCardInCart />
               </TableCell>
               <TableCell align='right'>10 €</TableCell>
-
               <TableCell align='right'>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <IconButton>
-                    <RemoveIcon />
-                  </IconButton>
-                  2{" "}
-                  <IconButton>
-                    <AddIcon />
-                  </IconButton>
-                </Box>
+                <IconButton>
+                  <RemoveIcon />
+                </IconButton>
+                2
+                <IconButton>
+                  <AddIcon />
+                </IconButton>
               </TableCell>
             </TableRow>
-            {/* ))} */}
           </TableBody>
         </Table>
-
         <Table>
-          {" "}
+          <TableCell align='right'>
+            <Typography>total: 20 €</Typography>
+          </TableCell>
           <TableRow>
-            <TableCell align='right'>total: 20 €</TableCell>
-          </TableRow>
-        </Table>
-        <Table>
-          {" "}
-          <TableRow>
-            <Button variant='contained'>Continue to checkout</Button>
+            <TableCell align='right'>
+              <Button variant='contained'>Continue to checkout</Button>
+            </TableCell>
           </TableRow>
         </Table>
       </TableContainer>

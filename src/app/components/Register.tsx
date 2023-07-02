@@ -12,6 +12,8 @@ import axios from "axios";
 import Warning from "../components/Warning";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HomeIcon from "@mui/icons-material/Home";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 interface IUserData {
   name: string;
@@ -234,11 +236,20 @@ const RegisterForm = () => {
             </Button>
             <Box sx={{ mb: 1 }}></Box>
             {warningMessage && (
-              <Warning
-                warningMessage={warningMessage}
-                warningType={warningType}
-                closeWarning={closeWarningMessage}
-              />
+              <Snackbar
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                open={!!warningMessage}
+              >
+                <Alert
+                  anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                  severity={warningType}
+                  warningMessage={warningMessage}
+                  warningType={warningType}
+                  onClose={closeWarningMessage}
+                >
+                  {warningMessage}
+                </Alert>
+              </Snackbar>
             )}
           </FormControl>
         </Box>

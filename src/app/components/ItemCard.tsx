@@ -11,9 +11,21 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Link from "next/link";
+import Item from "./Item";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
+}
+interface IItemData {
+  _id: string;
+  brand: string;
+  color: string;
+  description: string;
+  model: string;
+  name: string;
+  price: number;
+  specification: string;
+  type: string;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -27,9 +39,9 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export default function ItemCard() {
+export default function ItemCard(props: { itemData: IItemData }) {
+  const itemData = props.itemData;
   const [expanded, setExpanded] = React.useState(false);
-  const [itemId, setItemId] = React.useState("69"); // now hardcoded, later get this from db
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -37,7 +49,7 @@ export default function ItemCard() {
 
   return (
     <Card sx={{ width: 150, mr: 1 }}>
-      <Link href={`/item?itemId=${itemId}`}>
+      <Link href={`/item?itemId=${itemData._id}`}>
         <CardMedia
           component='img'
           height='194'
@@ -46,10 +58,10 @@ export default function ItemCard() {
         />
       </Link>
       <CardContent>
-        <Link href={`/item?itemId=${itemId}`}>
-          <Typography>Item description</Typography>
+        <Link href={`/item?itemId=${itemData._id}`}>
+          <Typography>{itemData.name}</Typography>
         </Link>
-        <Typography>10 €</Typography>
+        <Typography>{itemData.price} eur</Typography>
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label='add to favorites'>
@@ -69,17 +81,8 @@ export default function ItemCard() {
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
-          <Typography paragraph>More info</Typography>
-          <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet
-            over medium-high heat. Add chicken, shrimp and chorizo, and cook,
-            stirring occasionally until lightly browned, 6 to 8 minutes.
-            Transfer shrimp to a large plate and set aside, leaving chicken and
-            chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes,
-            onion, salt and pepper, and cook, stirring often until thickened and
-            fragrant, about 10 minutes. Add saffron broth and remaining 4 1/2
-            cups chicken broth; bring to a boil.
-          </Typography>
+          <Typography paragraph>Description:</Typography>
+          <Typography paragraph>{itemData.description}</Typography>
         </CardContent>
       </Collapse>
     </Card>

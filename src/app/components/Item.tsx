@@ -5,9 +5,33 @@ import CardMedia from "@mui/material/CardMedia";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function Item(props: { itemId: string | string[] }) {
-  const { itemId } = props;
+interface IItem {
+  _id: string;
+  brand: string;
+  color: string;
+  description: string;
+  model: string;
+  name: string;
+  price: number;
+  specification: string;
+  type: string;
+}
+
+export default function Item(props: { itemId: string }) {
+  const itemId = props.itemId;
+  const [item, setItem] = useState(["Loading..."]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/items/getItem?id=${itemId}`)
+      .then((res) => {
+        setItem(res.data.data);
+      });
+  }, [itemId]);
+
   return (
     <>
       <Box
@@ -19,7 +43,7 @@ export default function Item(props: { itemId: string | string[] }) {
         }}
       >
         <Box sx={{ width: 500, mr: 2 }}>
-          this is item page {itemId}
+          {/* this is item page {itemId} */}
           <CardMedia
             component='img'
             height='194'
@@ -27,24 +51,11 @@ export default function Item(props: { itemId: string | string[] }) {
             alt='image'
           />
           <CardContent>
-            <Typography>
-              Stacionarus kompiuteris Intop RM18236NS AMD Ryzen™ 5 3600, Nvidia
-              GeForce RTX 3060, 32 GB, 1480 GB
-            </Typography>
-            <Typography>10 €</Typography>
+            <Typography>{item && item.specification} </Typography>
+            <Typography>{item && item.price} </Typography>
           </CardContent>
         </Box>
-        <Typography sx={{ width: 500 }}>
-          Gaminio savybės Bendrosios charakteristikos Prekės tipas Stacionarūs
-          kompiuteriai Prekės ženklas Intop Serija RM18236NS Kompiuterio tipas
-          Žaidimams Įdiegta operacinė sistema DOS Procesorius ir pagrindinė
-          plokštė Procesoriaus tipas AMD Procesoriaus klasė AMD Ryzen 5
-          Procesoriaus modelis AMD Ryzen™ 5 3600 Procesoriaus branduoliai 6
-          Procesoriaus dažnis 3.6 GHz Procesoriaus maksimalus dažnis 4.2 GHz
-          Operatyvioji atmintis Operatyviosios atminties tipas DDR4 Operatyvioji
-          atmintis (RAM) 32 GB Maksimalus operatyviosios atminties kiekis (RAM)
-          64 GB Laisvų operatyviosios atminties lizdų kiekis 2
-        </Typography>
+        <Typography sx={{ width: 500 }}>{item && item.description}</Typography>
       </Box>
       <Box
         sx={{
