@@ -25,6 +25,15 @@ interface IUserData {
   gender: string;
 }
 
+const registerStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
+  height: "100%",
+  position: "absolute",
+};
+
 const RegisterForm = () => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -140,12 +149,8 @@ const RegisterForm = () => {
     // }
   };
 
-  const wrapperStyle = {
-    // width: 500,
-  };
-
   return (
-    <Box sx={wrapperStyle}>
+    <Box sx={registerStyle}>
       <Box
         sx={{
           height: "auto",

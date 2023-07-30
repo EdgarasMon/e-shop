@@ -1,26 +1,19 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Link from "next/link";
 import Box from "@mui/material/Box";
 
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-export default function ItemCard() {
-  const [expanded, setExpanded] = React.useState(false);
-  const [itemId, setItemId] = React.useState("69"); // now hardcoded, later get this from db
+export default function ItemCard(props: {
+  cartItem: { _id: string; name: string; price: string };
+}) {
+  const { cartItem } = props;
+  const [itemId, setItemId] = React.useState(cartItem._id);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -35,9 +28,9 @@ export default function ItemCard() {
         </Link>
         <CardContent>
           <Link href={`/item?itemId=${itemId}`}>
-            <Typography>Item description</Typography>
+            <Typography>{cartItem.name}</Typography>
           </Link>
-          <Typography>10 €</Typography>
+          <Typography>{cartItem.price} €</Typography>
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label='cart'>

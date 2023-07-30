@@ -16,7 +16,7 @@ import Link from "next/link";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
+import LogoutIcon from "@mui/icons-material/Logout";
 const pages = ["Products", "Pricing", "News", "About"];
 const settings = [
   "Profile",
@@ -27,11 +27,25 @@ const settings = [
     key='AddItem'
     color='white'
     href={"/addItem"}
+    // dar reikia kad local storage istrintu arba paskui rimciau su autorizacija padaryt
   >
     Add items
   </Link>,
-  "Logout",
+  <Tooltip title='logout'>
+    <Link
+      style={{ textDecoration: "none" }}
+      key='login'
+      color='white'
+      href={"/login"}
+    >
+      <LogoutIcon />
+    </Link>
+  </Tooltip>,
 ];
+
+const name = localStorage.getItem("name");
+const surname = localStorage.getItem("surname");
+const userId = localStorage.getItem("userId");
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -60,14 +74,13 @@ function ResponsiveAppBar() {
     <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <StorefrontIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <StorefrontIcon sx={{ display: { md: "flex" }, mr: 1 }} />
           <Typography
             variant='h6'
             noWrap
             component='a'
             href='/'
             sx={{
-              mr: 2,
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
               fontWeight: 700,
@@ -85,6 +98,7 @@ function ResponsiveAppBar() {
               aria-label='account of current user'
               aria-controls='menu-appbar'
               aria-haspopup='true'
+              onMouseEnter={handleOpenNavMenu}
               onClick={handleOpenNavMenu}
               color='inherit'
             >
@@ -103,13 +117,14 @@ function ResponsiveAppBar() {
                 horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
+              onClick={handleCloseNavMenu}
               onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onMouseLeave={handleCloseNavMenu}>
                   <Typography textAlign='center'>{page}</Typography>
                 </MenuItem>
               ))}
@@ -146,27 +161,34 @@ function ResponsiveAppBar() {
             ))}
           </Box>
 
+          {name && surname && (
+            <Typography sx={{ mr: 3 }}>
+              Welcome {name} {surname}
+            </Typography>
+          )}
           <Box
             sx={{
               display: "flex",
               alignItems: "baseline",
             }}
           >
-            <Tooltip title='login'>
-              <IconButton>
-                <Link href={"/login"}>
-                  <LoginIcon
-                    sx={{
-                      color: "white",
-                    }}
-                  />
-                </Link>
-              </IconButton>
-            </Tooltip>
+            {!name && !surname && (
+              <Tooltip title='login'>
+                <IconButton>
+                  <Link href={"/login"}>
+                    <LoginIcon
+                      sx={{
+                        color: "white",
+                      }}
+                    />
+                  </Link>
+                </IconButton>
+              </Tooltip>
+            )}
 
             <IconButton>
               <Tooltip title='cart'>
-                <Link href={"/cart"}>
+                <Link href={`/cart?userId=${userId}`}>
                   <ShoppingCartIcon
                     sx={{
                       color: "white",
@@ -204,8 +226,8 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              {settings.map((setting, index) => (
+                <MenuItem key={index} onClick={handleCloseUserMenu}>
                   <Typography textAlign='center'>{setting}</Typography>
                 </MenuItem>
               ))}

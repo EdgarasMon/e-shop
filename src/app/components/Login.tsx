@@ -17,6 +17,10 @@ const msg = {
 const loginStyle = {
   display: "flex",
   justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
+  height: "100%",
+  position: "absolute",
 };
 
 const Login = () => {
@@ -45,6 +49,10 @@ const Login = () => {
         setWarningMessage(message ?? "Unknown error");
         setWarningType(type);
         resetUserStates();
+        const { _id, name, surname } = res.data;
+        localStorage.setItem("name", name);
+        localStorage.setItem("surname", surname);
+        localStorage.setItem("userId", _id);
         if (message === msg.success) {
           router.push("/");
         }
@@ -80,7 +88,7 @@ const Login = () => {
           Register
         </Button>
         <Box sx={{ mb: 1 }}></Box>
-        <Button href={"home"} variant='contained' startIcon={<ArrowBackIcon />}>
+        <Button href={"/"} variant='contained' startIcon={<ArrowBackIcon />}>
           Back
         </Button>
         <Box sx={{ mb: 1 }}></Box>

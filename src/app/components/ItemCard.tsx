@@ -1,49 +1,93 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
+import { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Link from "next/link";
 import IItem from "../Interfaces/IItem";
+import axios from "axios";
+import InfoIcon from "@mui/icons-material/Info";
+import Tooltip from "@mui/material/Tooltip";
+import Image from "next/image";
 
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
-
-export default function ItemCard(props: { itemData: IItem }) {
+export default function ItemCard(props: {
+  itemData: IItem;
+  image?: any;
+  cartItem: string;
+  whishListItem: string;
+}) {
   const itemData = props.itemData;
-  const [expanded, setExpanded] = React.useState(false);
+  const { cartItem, whishListItem } = props;
+  const [image, setImage] = useState("");
+  const [imageId, setImageId] = useState(itemData._id);
+  const [savedToCart, setSavedToCart] = useState(cartItem);
+  const [savedToWhishList, setSavedToWhishList] = useState(whishListItem);
+  const userId = localStorage.getItem("userId");
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/items/getImage?id=${imageId}`, {
+        responseType: "arraybuffer",
+      })
+      .then((res) => {
+        const buffer = Buffer.from(res.data, "binary");
+        const dataUrl = `data:image/jpeg;base64,${buffer.toString("base64")}`;
+        setImage(dataUrl);
+      })
+      .catch((error) => {
+        console.error("Error fetching image:", error);
+      });
+  }, [imageId]);
+
+  function saveToCart(itemId: string) {
+    axios
+      .post(`http://localhost:3000/items/saveToCart?itemId=${itemId}`, {
+        userId,
+      })
+      .then((res) => {
+        if (res.data.message === "Item saved") {
+          setSavedToCart("primary");
+        } else if (res.data.message === "Item deleted") {
+          setSavedToCart("none");
+        }
+      })
+      .catch((error) => {
+        console.error("Item was not saved:", error);
+      });
+  }
+
+  function saveToWhishList(itemId: string) {
+    axios
+      .post(`http://localhost:3000/items/saveToWhishList?itemId=${itemId}`, {
+        userId,
+      })
+      .then((res) => {
+        if (res.data.message === "Item saved") {
+          setSavedToWhishList("error");
+        } else if (res.data.message === "Item deleted") {
+          setSavedToWhishList("none");
+        }
+      })
+      .catch((error) => {
+        console.error("Item was not saved:", error);
+      });
+  }
 
   return (
     <Card sx={{ width: 150, mr: 1 }}>
       <Link href={`/item?itemId=${itemData._id}`}>
-        <CardMedia
-          component='img'
-          height='194'
-          image='https://images.unsplash.com/photo-1522770179533-24471fcdba45'
+        <Image
+          key={itemData._id}
+          src={image}
           alt='image'
+          width={"150"}
+          height={"150"}
+          style={{ objectFit: "contain" }}
+          loading='lazy'
+          quality={80}
         />
       </Link>
       <CardContent>
@@ -53,27 +97,20 @@ export default function ItemCard(props: { itemData: IItem }) {
         <Typography>{itemData.price} eur</Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label='add to favorites'>
-          <FavoriteIcon />
+        <IconButton onClick={() => saveToWhishList(itemData._id)}>
+          <FavoriteIcon color={savedToWhishList} />
         </IconButton>
-        <IconButton aria-label='cart'>
-          <ShoppingCartIcon />
+
+        <IconButton onClick={() => saveToCart(itemData._id)}>
+          <ShoppingCartIcon color={savedToCart} />
         </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label='show more'
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
+
+        <IconButton>
+          <Tooltip title={itemData.description}>
+            <InfoIcon />
+          </Tooltip>
+        </IconButton>
       </CardActions>
-      <Collapse in={expanded} timeout='auto' unmountOnExit>
-        <CardContent>
-          <Typography paragraph>Description:</Typography>
-          <Typography paragraph>{itemData.description}</Typography>
-        </CardContent>
-      </Collapse>
     </Card>
   );
 }
