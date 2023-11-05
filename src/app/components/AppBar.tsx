@@ -27,21 +27,27 @@ const settings = [
     key='AddItem'
     color='white'
     href={"/addItem"}
-    // dar reikia kad local storage istrintu arba paskui rimciau su autorizacija padaryt
   >
     Add items
   </Link>,
-  <Tooltip title='logout'>
-    <Link
-      style={{ textDecoration: "none" }}
-      key='login'
-      color='white'
-      href={"/login"}
-    >
-      <LogoutIcon />
-    </Link>
-  </Tooltip>,
+  <Link
+    style={{ textDecoration: "none" }}
+    key='login'
+    color='white'
+    href={"/login"}
+    onClick={clearUserLocalStorage}
+  >
+    Logout
+    <LogoutIcon />
+  </Link>,
 ];
+
+function clearUserLocalStorage() {
+  localStorage.removeItem("name");
+  localStorage.removeItem("surname");
+  localStorage.removeItem("userId");
+  localStorage.removeItem("token");
+}
 
 const name = localStorage.getItem("name");
 const surname = localStorage.getItem("surname");
@@ -188,7 +194,8 @@ function ResponsiveAppBar() {
 
             <IconButton>
               <Tooltip title='cart'>
-                <Link href={`/cart?userId=${userId}`}>
+                {/* <Link href={`/cart?userId=${userId}`}> */}
+                <Link href={`/cart`}>
                   <ShoppingCartIcon
                     sx={{
                       color: "white",

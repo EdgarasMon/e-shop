@@ -11,17 +11,21 @@ import IItem from "../Interfaces/IItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function Item(props: { itemId: string }) {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const itemId = props.itemId;
   const [item, setItem] = useState<IItem>();
   const [image, setImage] = useState("");
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/items/getItem?id=${itemId}`)
+      .get(`http://localhost:3000/items/getItem?id=${itemId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         setItem(res.data.data);
       });
-  }, [itemId]);
+  }, [token, itemId]);
 
   useEffect(() => {
     axios

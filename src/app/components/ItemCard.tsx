@@ -26,6 +26,9 @@ export default function ItemCard(props: {
   const [savedToCart, setSavedToCart] = useState(cartItem);
   const [savedToWhishList, setSavedToWhishList] = useState(whishListItem);
   const userId = localStorage.getItem("userId");
+  const [token, setToken] = useState(
+    typeof window !== "undefined" ? localStorage.getItem("token") : null
+  );
 
   useEffect(() => {
     axios
@@ -44,9 +47,13 @@ export default function ItemCard(props: {
 
   function saveToCart(itemId: string) {
     axios
-      .post(`http://localhost:3000/items/saveToCart?itemId=${itemId}`, {
-        userId,
-      })
+      .post(
+        `http://localhost:3000/items/saveToCart?itemId=${itemId}`,
+        {
+          userId,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then((res) => {
         if (res.data.message === "Item saved") {
           setSavedToCart("primary");
@@ -61,9 +68,13 @@ export default function ItemCard(props: {
 
   function saveToWhishList(itemId: string) {
     axios
-      .post(`http://localhost:3000/items/saveToWhishList?itemId=${itemId}`, {
-        userId,
-      })
+      .post(
+        `http://localhost:3000/items/saveToWhishList?itemId=${itemId}`,
+        {
+          userId,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then((res) => {
         if (res.data.message === "Item saved") {
           setSavedToWhishList("error");
@@ -98,11 +109,15 @@ export default function ItemCard(props: {
       </CardContent>
       <CardActions disableSpacing>
         <IconButton onClick={() => saveToWhishList(itemData._id)}>
-          <FavoriteIcon color={savedToWhishList} />
+          <FavoriteIcon
+            color={"error" === savedToWhishList ? "error" : "inherit"}
+          />
         </IconButton>
 
         <IconButton onClick={() => saveToCart(itemData._id)}>
-          <ShoppingCartIcon color={savedToCart} />
+          <ShoppingCartIcon
+            color={"primary" === savedToCart ? "primary" : "inherit"}
+          />
         </IconButton>
 
         <IconButton>

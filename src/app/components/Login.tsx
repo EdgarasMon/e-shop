@@ -29,7 +29,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const [warningMessage, setWarningMessage] = useState("");
-  const [warningType, setWarningType] = useState("");
+  const [warningType, setWarningType] = useState("info");
 
   const closeWarningMessage = () => {
     setWarningMessage("");
@@ -49,10 +49,11 @@ const Login = () => {
         setWarningMessage(message ?? "Unknown error");
         setWarningType(type);
         resetUserStates();
-        const { _id, name, surname } = res.data;
+        const { _id, name, surname, token } = res.data;
         localStorage.setItem("name", name);
         localStorage.setItem("surname", surname);
         localStorage.setItem("userId", _id);
+        localStorage.setItem("token", token);
         if (message === msg.success) {
           router.push("/");
         }
@@ -72,8 +73,13 @@ const Login = () => {
   return (
     <Box sx={loginStyle}>
       <FormControl>
-        <TextField onChange={(e) => setEmail(e.target.value)} label='E-mail' />
         <TextField
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          label='E-mail'
+        />
+        <TextField
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
           label='Password'
           type='password'
@@ -95,14 +101,11 @@ const Login = () => {
         <Box sx={{ p: 1 }} />
         {warningMessage && (
           <Snackbar
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
             open={!!warningMessage}
           >
             <Alert
-              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-              severity={warningType}
-              warningMessage={warningMessage}
-              warningType={warningType}
+              severity={"error" === warningType ? "error" : "success"}
               onClose={closeWarningMessage}
             >
               {warningMessage}

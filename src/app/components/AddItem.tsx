@@ -18,6 +18,9 @@ import shoppingTypes from "../../../data/shoppingTypes.json";
 import colors from "../../../data/colors.json";
 
 function AddItem() {
+  const [token, setToken] = useState(
+    typeof window !== "undefined" ? localStorage.getItem("token") : null
+  );
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -81,7 +84,9 @@ function AddItem() {
     formData.append("color", color);
 
     axios
-      .post("http://localhost:3000/items/addItem", formData)
+      .post("http://localhost:3000/items/addItem", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         const { message, type } = res.data;
         setWarningMessage(message ?? "Unknown error");
@@ -223,14 +228,11 @@ function AddItem() {
       </TableContainer>
       {warningMessage && (
         <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           open={!!warningMessage}
         >
           <Alert
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            severity={warningType}
-            warningMessage={warningMessage}
-            warningType={warningType}
+            severity={"success" === warningType ? "success" : "error"}
             onClose={closeWarningMessage}
           >
             {warningMessage}

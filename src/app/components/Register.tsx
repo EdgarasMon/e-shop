@@ -242,14 +242,11 @@ const RegisterForm = () => {
             <Box sx={{ mb: 1 }}></Box>
             {warningMessage && (
               <Snackbar
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 open={!!warningMessage}
               >
                 <Alert
-                  anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                  severity={warningType}
-                  warningMessage={warningMessage}
-                  warningType={warningType}
+                  severity={warningType === "error" ? "error" : "success"}
                   onClose={closeWarningMessage}
                 >
                   {warningMessage}

@@ -12,55 +12,82 @@ import axios from "axios";
 import IItem from "../../app/Interfaces/IItem";
 
 const Home = () => {
-  const [items, setItems] = useState<IItem[]>();
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+  const [items, setItems] = useState([]);
   const [itemsLenght, setItemsLenght] = useState(0);
   const [pages, setPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [allItemIds, setAllItemIds] = useState([""]);
-  const [paginatedIds, setPaginatedIds] = useState(null);
-
-  const [userCartItems, setUserCartItems] = useState([]);
-  const [userWhishListItems, setUserWhishListItems] = useState([]);
-
-  const userId = localStorage.getItem("userId");
+  const [allItemIds, setAllItemIds] = useState("");
+  const [paginatedIds, setPaginatedIds] = useState("");
+  const [userCartItems, setUserCartItems] = useState("");
+  const [userWhishListItems, setUserWhishListItems] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3000/items/getItems").then((res) => {
-      setItemsLenght(res.data.data.length);
-      setAllItemIds(items?.map((el) => el._id));
-      setPages(Math.ceil(itemsLenght / 5));
-      setItems(res.data.data);
-    });
-  }, [itemsLenght]);
+    axios
+      .get("http://localhost:3000/items/getItems", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const newItems = res.data.data;
+        setItems(newItems);
+        setItemsLenght(newItems.length);
+        setAllItemIds(newItems.map((el: any) => el._id));
+        setPages(Math.ceil(newItems.length / 5));
+      })
+      .catch((error) => {
+        console.error("Error fetching items:", error);
+      });
+  }, [token]);
 
-  const handlePageChange = (event, newPage) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    newPage: number
+  ) => {
     setCurrentPage(newPage);
-    const lastIndexItem = newPage * 5 - 1;
-    const firstIndexItem = lastIndexItem - 4;
-    setPaginatedIds(allItemIds?.slice(firstIndexItem, lastIndexItem + 1));
+
+    // Calculate the range of items to be displayed
+    const itemsPerPage = 5;
+    const lastIndexItem = newPage * itemsPerPage - 1;
+    const firstIndexItem = lastIndexItem - (itemsPerPage - 1);
+
+    // Use slice to get the IDs of the items to display
+    const paginatedItemIds = allItemIds.slice(
+      firstIndexItem,
+      lastIndexItem + 1
+    );
+
+    setPaginatedIds(paginatedItemIds);
   };
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/items/getUserCartItems?userId=${userId}`)
+      .get(`http://localhost:3000/items/getUserCartItems?userId=${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         setUserCartItems(res.data.items);
       })
       .catch((error) => {
         console.error("Error fetching user items:", error);
       });
-  }, []);
+  }, [token, userId]);
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/items/getUserWishListItems?userId=${userId}`)
+      .get(
+        `http://localhost:3000/items/getUserWishListItems?userId=${userId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then((res) => {
         setUserWhishListItems(res.data.items);
       })
       .catch((error) => {
         console.error("Error fetching user whish items:", error);
       });
-  }, []);
+  }, [token, userId]);
 
   return (
     <>
@@ -72,7 +99,7 @@ const Home = () => {
       <Box>
         <Box sx={{ display: "flex", flexWrap: "wrap", m: 2 }}>
           {paginatedIds
-            ? items?.map((item) =>
+            ? items.map((item: IItem) =>
                 paginatedIds.includes(item._id) ? (
                   <ItemCard
                     key={item._id}
@@ -86,7 +113,7 @@ const Home = () => {
                   />
                 ) : null
               )
-            : items?.map((item) => (
+            : items?.map((item: IItem) => (
                 <ItemCard
                   key={item._id}
                   itemData={item}
@@ -99,6 +126,7 @@ const Home = () => {
                 />
               ))}
         </Box>
+
         <Box sx={{ display: "flex", justifyContent: "center", mb: 8 }}>
           <Pagination
             count={pages}

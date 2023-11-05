@@ -1,24 +1,21 @@
-import * as React from "react";
+import { useState } from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Link from "next/link";
 import Box from "@mui/material/Box";
+import IItem from "../Interfaces/IItem";
 
-export default function ItemCard(props: {
-  cartItem: { _id: string; name: string; price: string };
-}) {
+export default function ItemCard(props: { cartItem: IItem }) {
   const { cartItem } = props;
-  const [itemId, setItemId] = React.useState(cartItem._id);
+  // const [itemId, setItemId] = useState(cartItem._id);
+  const [item, setItem] = useState(cartItem);
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Card sx={{ width: 150, mr: 1 }}>
-        <Link href={`/item?itemId=${itemId}`}>
+      <Card sx={{ width: 150 }}>
+        <Link href={`/item?itemId=${item._id}`}>
           <CardMedia
             component='img'
             height='194'
@@ -26,17 +23,14 @@ export default function ItemCard(props: {
             alt='image'
           />
         </Link>
-        <CardContent>
-          <Link href={`/item?itemId=${itemId}`}>
-            <Typography>{cartItem.name}</Typography>
-          </Link>
-          <Typography>{cartItem.price} €</Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label='cart'>
-            <RemoveCircleOutlineIcon />
-          </IconButton>
-        </CardActions>
+        {item.map((el: IItem) => (
+          <CardContent key={el._id}>
+            <Link href={`/item?itemId=${el._id}`}>
+              <Typography>{el.name}</Typography>
+            </Link>
+            <Typography>{el.price} €</Typography>
+          </CardContent>
+        ))}
       </Card>
     </Box>
   );
