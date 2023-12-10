@@ -9,6 +9,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useRouter } from "next/router";
+import Paper from "@mui/material/Paper";
 
 const msg = {
   success: "succesfully loged in",
@@ -49,11 +50,12 @@ const Login = () => {
         setWarningMessage(message ?? "Unknown error");
         setWarningType(type);
         resetUserStates();
-        const { _id, name, surname, token } = res.data;
+        const { _id, name, surname, token, role } = res.data;
         localStorage.setItem("name", name);
         localStorage.setItem("surname", surname);
         localStorage.setItem("userId", _id);
         localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
         if (message === msg.success) {
           router.push("/");
         }
@@ -72,47 +74,60 @@ const Login = () => {
 
   return (
     <Box sx={loginStyle}>
-      <FormControl>
-        <TextField
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          label='E-mail'
-        />
-        <TextField
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          label='Password'
-          type='password'
-        />
-        <Box sx={{ mb: 1 }}></Box>
+      <Paper
+        elevation={24}
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          "& > :not(style)": {
+            m: 1,
+          },
+        }}
+      >
+        <FormControl>
+          <TextField
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            label='E-mail'
+          />
+          <TextField
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            label='Password'
+            type='password'
+          />
+          <Box sx={{ mb: 1 }}></Box>
 
-        <Button onClick={loginUser} variant='contained'>
-          Login
-        </Button>
-        <Box sx={{ mb: 1 }}></Box>
-        <Button href={"register"} variant='contained'>
-          Register
-        </Button>
-        <Box sx={{ mb: 1 }}></Box>
-        <Button href={"/"} variant='contained' startIcon={<ArrowBackIcon />}>
-          Back
-        </Button>
-        <Box sx={{ mb: 1 }}></Box>
-        <Box sx={{ p: 1 }} />
-        {warningMessage && (
-          <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            open={!!warningMessage}
-          >
-            <Alert
-              severity={"error" === warningType ? "error" : "success"}
-              onClose={closeWarningMessage}
+          <Button onClick={loginUser} variant='contained'>
+            Login
+          </Button>
+          <Box sx={{ mb: 1 }}></Box>
+          <Button href={"register"} variant='contained'>
+            Register
+          </Button>
+          <Box sx={{ mb: 1 }}></Box>
+          <Button
+            href={"/"}
+            variant='contained'
+            startIcon={<ArrowBackIcon />}
+          />
+          <Box></Box>
+          <Box />
+          {warningMessage && (
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              open={!!warningMessage}
             >
-              {warningMessage}
-            </Alert>
-          </Snackbar>
-        )}
-      </FormControl>
+              <Alert
+                severity={"error" === warningType ? "error" : "success"}
+                onClose={closeWarningMessage}
+              >
+                {warningMessage}
+              </Alert>
+            </Snackbar>
+          )}
+        </FormControl>
+      </Paper>
     </Box>
   );
 };

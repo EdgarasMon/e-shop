@@ -10,12 +10,14 @@ import Footer from "../../app/components/Footer";
 import Pagination from "@mui/material/Pagination";
 import axios from "axios";
 import IItem from "../../app/Interfaces/IItem";
+import { useRouter } from "next/navigation";
 
 const Home = () => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const userId =
     typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+  const router = useRouter();
   const [items, setItems] = useState([]);
   const [itemsLenght, setItemsLenght] = useState(0);
   const [pages, setPages] = useState(0);
@@ -38,7 +40,8 @@ const Home = () => {
         setPages(Math.ceil(newItems.length / 5));
       })
       .catch((error) => {
-        console.error("Error fetching items:", error);
+        // console.error("Error fetching items:", error);
+        router.push("/login");
       });
   }, [token]);
 
@@ -71,7 +74,8 @@ const Home = () => {
         setUserCartItems(res.data.items);
       })
       .catch((error) => {
-        console.error("Error fetching user items:", error);
+        // console.error("Error fetching user items:", error);
+        router.push("/login");
       });
   }, [token, userId]);
 
@@ -85,7 +89,8 @@ const Home = () => {
         setUserWhishListItems(res.data.items);
       })
       .catch((error) => {
-        console.error("Error fetching user whish items:", error);
+        // console.error("Error fetching user whish items:", error);
+        router.push("/login");
       });
   }, [token, userId]);
 
@@ -136,7 +141,7 @@ const Home = () => {
           />
         </Box>
       </Box>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

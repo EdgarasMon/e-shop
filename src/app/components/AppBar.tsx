@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -17,49 +18,15 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
-const pages = ["Products", "Pricing", "News", "About"];
-const settings = [
-  "Profile",
-  "Account",
-  "Dashboard",
-  <Link
-    style={{ textDecoration: "none" }}
-    key='AddItem'
-    color='white'
-    href={"/addItem"}
-  >
-    Add items
-  </Link>,
-  <Link
-    style={{ textDecoration: "none" }}
-    key='login'
-    color='white'
-    href={"/login"}
-    onClick={clearUserLocalStorage}
-  >
-    Logout
-    <LogoutIcon />
-  </Link>,
-];
-
-function clearUserLocalStorage() {
-  localStorage.removeItem("name");
-  localStorage.removeItem("surname");
-  localStorage.removeItem("userId");
-  localStorage.removeItem("token");
-}
-
-const name = localStorage.getItem("name");
-const surname = localStorage.getItem("surname");
-const userId = localStorage.getItem("userId");
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const pages = ["Products", "Pricing", "News", "About"];
+  const [userId, setUserId] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [role, setRole] = useState("");
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -75,6 +42,28 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userId = localStorage.getItem("userId");
+      const storedName = localStorage.getItem("name");
+      const storedSurname = localStorage.getItem("surname");
+      const storedRole = localStorage.getItem("role");
+
+      setUserId(userId || "");
+      setName(storedName || "");
+      setSurname(storedSurname || "");
+      setRole(storedRole || "");
+    }
+  }, []);
+
+  function clearUserLocalStorage() {
+    localStorage.removeItem("name");
+    localStorage.removeItem("surname");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+  }
 
   return (
     <AppBar position='static'>
@@ -97,7 +86,6 @@ function ResponsiveAppBar() {
           >
             E-SHOP
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size='large'
@@ -172,6 +160,7 @@ function ResponsiveAppBar() {
               Welcome {name} {surname}
             </Typography>
           )}
+
           <Box
             sx={{
               display: "flex",
@@ -194,7 +183,6 @@ function ResponsiveAppBar() {
 
             <IconButton>
               <Tooltip title='cart'>
-                {/* <Link href={`/cart?userId=${userId}`}> */}
                 <Link href={`/cart`}>
                   <ShoppingCartIcon
                     sx={{
@@ -207,39 +195,60 @@ function ResponsiveAppBar() {
 
             <Tooltip title='user settings'>
               <IconButton onClick={handleOpenUserMenu}>
-                {/* <Avatar alt='Remy Sharp' /> */}
                 <AccountCircleIcon
                   sx={{
                     color: "white",
                   }}
                 />
-                {/* src='/static/images/avatar/2.jpg' */}
               </IconButton>
             </Tooltip>
-
-            <Menu
-              sx={{ mt: "45px" }}
-              id='menu-appbar'
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting, index) => (
-                <MenuItem key={index} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
           </Box>
+
+          <Menu
+            sx={{ mt: "45px" }}
+            id='menu-appbar'
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            <MenuItem>Profile</MenuItem>
+            <MenuItem>Account</MenuItem>
+            <MenuItem>Dashboard</MenuItem>
+
+            {role === "admin" && (
+              <MenuItem>
+                <Link
+                  style={{ textDecoration: "none" }}
+                  key='AddItem'
+                  color='white'
+                  href={"/addItem"}
+                >
+                  Add items
+                </Link>
+              </MenuItem>
+            )}
+
+            <MenuItem>
+              <Link
+                style={{ textDecoration: "none" }}
+                key='login'
+                color='white'
+                href={"/login"}
+                onClick={clearUserLocalStorage}
+              >
+                <LogoutIcon titleAccess='Logout' />
+              </Link>
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </Container>
     </AppBar>

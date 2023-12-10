@@ -232,9 +232,7 @@ const RegisterForm = () => {
               href={"/login"}
               variant='contained'
               startIcon={<ArrowBackIcon />}
-            >
-              Back
-            </Button>
+            />
             <Box sx={{ mb: 1 }} />
             <Button href={"/"} variant='contained' startIcon={<HomeIcon />}>
               Home

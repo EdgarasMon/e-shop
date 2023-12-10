@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import IItem from "../Interfaces/IItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { IconButton, Tooltip } from "@mui/material";
 
 export default function Item(props: { itemId: string }) {
   const token =
@@ -38,15 +39,19 @@ export default function Item(props: { itemId: string }) {
         setImage(dataUrl);
       })
       .catch((error) => {
-        console.error("Error fetching image:", error);
+        // console.error("Error fetching image:", error);
       });
   }, [itemId]);
 
   return (
     <>
-      <Button href={"/"} variant='contained' startIcon={<ArrowBackIcon />}>
-        Back
-      </Button>
+      <Box>
+        <Tooltip title='back'>
+          <IconButton href={"/"}>
+            <ArrowBackIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -56,7 +61,13 @@ export default function Item(props: { itemId: string }) {
         }}
       >
         <Box sx={{ width: 500, mr: 2 }}>
-          <CardMedia component='img' height='194' image={image} alt='image' />
+          <CardMedia
+            component='img'
+            height='194'
+            image={image}
+            src='/images/not-found.webp'
+            alt='image'
+          />
           <CardContent>
             <Typography>{item && item.specification} </Typography>
             <Typography>{item && item.price} </Typography>

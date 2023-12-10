@@ -26,7 +26,7 @@ export default function ImageCarousel() {
         );
 
         const responses = await Promise.all(imageDataPromises);
-        const imageBuffers = responses.map((response) => response.data);
+        const imageBuffers: any = responses.map((response) => response.data);
 
         setImages(imageBuffers);
       } catch (error) {
@@ -56,15 +56,17 @@ export default function ImageCarousel() {
       >
         {images.map((buffer, index) => (
           <SwiperSlide key={index}>
-            <Image
-              src={`data:image/jpeg;base64,${Buffer.from(buffer).toString(
-                "base64"
-              )}`}
-              alt='image'
-              width={"500"}
-              height={"500"}
-              style={{ objectFit: "contain" }}
-            />
+            {buffer && (
+              <Image
+                src={`data:image/jpeg;base64,${Buffer.from(buffer).toString(
+                  "base64"
+                )}`}
+                alt='image'
+                width={"500"}
+                height={"500"}
+                style={{ objectFit: "contain" }}
+              />
+            )}
           </SwiperSlide>
         ))}
       </Swiper>

@@ -41,7 +41,7 @@ export default function ItemCard(props: {
         setImage(dataUrl);
       })
       .catch((error) => {
-        console.error("Error fetching image:", error);
+        // console.error("Error fetching image:", error);
       });
   }, [imageId]);
 
@@ -88,18 +88,31 @@ export default function ItemCard(props: {
   }
 
   return (
-    <Card sx={{ width: 150, mr: 1 }}>
+    <Card sx={{ width: 150, m: 0.5 }}>
       <Link href={`/item?itemId=${itemData._id}`}>
-        <Image
-          key={itemData._id}
-          src={image}
-          alt='image'
-          width={"150"}
-          height={"150"}
-          style={{ objectFit: "contain" }}
-          loading='lazy'
-          quality={80}
-        />
+        {image ? (
+          <Image
+            key={itemData._id}
+            src={image}
+            alt='image'
+            width={"150"}
+            height={"150"}
+            style={{ objectFit: "contain" }}
+            loading='lazy'
+            quality={80}
+          />
+        ) : (
+          <Image
+            key={""}
+            src='/images/not-found.webp'
+            alt='no-image'
+            width={"150"}
+            height={"150"}
+            style={{ objectFit: "contain" }}
+            loading='lazy'
+            quality={80}
+          />
+        )}
       </Link>
       <CardContent>
         <Link href={`/item?itemId=${itemData._id}`}>
